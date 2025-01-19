@@ -1,22 +1,32 @@
-import { Stack, Image, Spinner } from '@chakra-ui/react'
+import { Stack, Image } from '@chakra-ui/react'
 import { useBreakpointValue } from '@chakra-ui/react'
 import { DeliveryDetails } from './components/delivery-details/delivery-details';
 import { useDeliveryDetails } from './hooks/use-delivery-details';
+import { useParams } from 'react-router-dom';
 
 const BORDER_RADIUS = 8
 
 function App() {
 
-  const { data } = useDeliveryDetails({ userId: '43dcba9e-e101-4a62-a75b-d19c9782e7b2' });
-  const isSmallScreen = useBreakpointValue({ base: true, md: false });
+  const { userId } = useParams();
+  const { data } = useDeliveryDetails({ userId: userId ?? '' });
+  const containerWidth = useBreakpointValue({ base: "90%", md: "50%" });
+  const containerTransform = useBreakpointValue({ base: "translateX(5%)", md: "translateX(50%)" });
+  const direction = useBreakpointValue<"column" | "row">({ base: 'column', md: 'row' });
+  const alignment = useBreakpointValue<"center" | "normal">({ base: 'center', md: 'normal' });
+
+  const imageWidth = useBreakpointValue({ base: 100, md: 300 });
+  const imageHeight = useBreakpointValue({ base: 100, md: "auto" });
+  const imageMarginTop = useBreakpointValue({ base: -12, md: 0 });
+  const imageBorderRadius = useBreakpointValue({ base: "50px", md: `${BORDER_RADIUS}px 0px 0px ${BORDER_RADIUS}px` });
 
   return (
     <Stack
       display={"flex"}
       direction={"column"}
       alignSelf={"center"}
-      width={isSmallScreen ? "90%" : "50%"}
-      transform={isSmallScreen ? "translateX(5%)" : "translateX(50%)"}
+      width={containerWidth}
+      transform={containerTransform}
       borderRadius={BORDER_RADIUS}
       border={"0.5px solid grey"}
       boxShadow={"0 0 10px rgba(0, 0, 0, 0.1)"}
@@ -28,7 +38,7 @@ function App() {
       {
         data?.freeGift && (
           <Image
-            src={"./free-gift.svg"}
+            src={"../../free-gift.svg"}
             width={100}
             position={"absolute"}
             transform={"rotate(20deg)"}
@@ -38,19 +48,18 @@ function App() {
         )
       }
       <Stack
-        direction={isSmallScreen ? 'column' : 'row'}
+        direction={direction ?? "row"}
         width={"100%"}
-        alignItems={isSmallScreen ? 'center' : 'normal'}
+        alignItems={alignment ?? "normal"}
       >
         <Image
-          src={"./pig.jpeg"}
+          src={"../../pig.jpeg"}
           alt="pig"
-          width={isSmallScreen ? 100 : 300}
-          height={isSmallScreen ? 100 : "auto"}
-          marginTop={isSmallScreen ? -12 : 0}
+          width={imageWidth}
+          height={imageHeight}
+          marginTop={imageMarginTop}
           style={{
-            borderRadius: isSmallScreen ? `50px`
-              : `${BORDER_RADIUS}px 0 0 ${BORDER_RADIUS}px`,
+            borderRadius: imageBorderRadius
           }}
         />
         {
@@ -59,7 +68,6 @@ function App() {
               title={data?.title}
               message={data?.message}
               price={data?.price}
-              freeGift={data?.freeGift}
             />
           )
         }

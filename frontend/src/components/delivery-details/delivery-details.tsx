@@ -5,23 +5,21 @@ type Props = {
     title: string,
     message: string,
     price: number,
-    freeGift: boolean,
 }
 
 export const DeliveryDetails = ({
     title, 
     message,
     price,
-    freeGift,
 } : Props) => {
 
-    const isSmallScreen = useBreakpointValue({ base: true, md: false });
+    const paddingY = useBreakpointValue({ base: 4, md: 12 });
 
     return (
         <Stack
             direction={"column"}
             justifyContent={"flex-start"}
-            paddingY={isSmallScreen ? 4 : 12}
+            paddingY={paddingY}
             paddingX={4}
         >
             <Text
